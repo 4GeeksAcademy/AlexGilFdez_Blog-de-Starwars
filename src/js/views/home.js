@@ -113,7 +113,7 @@ export const Home = () => {
                             </div>
                         </div>
                     );
-                })} 
+                })}
             </div>
 
             <h2 className="text-danger">Planets</h2>

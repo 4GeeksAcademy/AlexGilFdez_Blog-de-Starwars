@@ -25,10 +25,8 @@ export const DetailView = () => {
                 setDetails(null);
             }
         };
-
         fetchDetails();
     }, [category, theid]);
-
 
     const getImageUrl = () => {
         if (category === "people") return `https://starwars-visualguide.com/assets/img/characters/${theid}.jpg`;
