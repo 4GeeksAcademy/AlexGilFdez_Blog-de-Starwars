@@ -1,32 +1,36 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
-import "../../styles/home.css";
 import { Link } from "react-router-dom";
+import "../../styles/home.css";
 
 export const Home = () => {
-    const { store } = useContext(Context);
+    const { store, actions } = useContext(Context);
+    const isFavorite = (uid) => {
+        const result = store.favorites.some((fav) => fav.uid === uid);
+        console.log("Checking favorite:", uid, "Result:", result);
+        return result;
+    };
 
+    const getCharacterImageUrl = (uid) =>
+        `https://starwars-visualguide.com/assets/img/characters/${uid}.jpg`;
 
-    const getCharacterImageUrl = (index) =>
-        `https://starwars-visualguide.com/assets/img/characters/${index + 1}.jpg`;
+    const getStarshipImageUrl = (uid) =>
+        `https://starwars-visualguide.com/assets/img/starships/${uid}.jpg`;
 
-    const getStarshipImageUrl = (index) =>
-        `https://starwars-visualguide.com/assets/img/starships/${index + 1}.jpg`;
-
-    const getPlanetImageUrl = (index) =>
-        `https://starwars-visualguide.com/assets/img/planets/${index + 1}.jpg`;
+    const getPlanetImageUrl = (uid) =>
+        `https://starwars-visualguide.com/assets/img/planets/${uid}.jpg`;
 
     return (
         <div className="container">
-
             <h2 className="text-danger">Characters</h2>
             <div className="card-deck d-flex mb-5">
-                {store.people.length > 0 ? (
-                    store.people.map((character, index) => (
-                        <div className="card m-3" key={index}>
+                {store.people.map((character) => {
+                    console.log("Character UID:", character.uid, "Category: people");
+                    return (
+                        <div className="card m-3" key={character.uid}>
                             <img
                                 className="card-img-top"
-                                src={getCharacterImageUrl(index)}
+                                src={getCharacterImageUrl(character.uid)}
                                 alt={character.name}
                                 onError={(e) =>
                                 (e.target.src =
@@ -36,28 +40,44 @@ export const Home = () => {
                             <div className="card-body">
                                 <h5 className="card-title">{character.name}</h5>
                                 <div className="d-flex justify-content-between">
-                                        <Link to={`/detail/people/${character.uid}`}>
-                                        <button className="btn btn-outline-primary"> Learn more! </button>
-                                        </Link>         
-                                    <button className="btn btn-outline-warning">
-                                        <i className="fa-regular fa-heart"></i>
+                                    <Link to={`/detail/people/${character.uid}`}>
+                                        <button className="btn btn-outline-primary">
+                                            Learn more!
+                                        </button>
+                                    </Link>
+                                    <button
+                                        className="btn btn-outline-warning"
+                                        onClick={() =>
+                                            isFavorite(`${character.uid}-people`)
+                                                ? actions.removeFavorite(`${character.uid}-people`)
+                                                : actions.addFavorite({
+                                                    uid: `${character.uid}-people`,
+                                                    name: character.name,
+                                                    category: "people",
+                                                })}>
+                                        <i className={
+                                            isFavorite(`${character.uid}-people`)
+                                                ? "fa-solid fa-heart"
+                                                : "fa-regular fa-heart"
+                                        }
+                                        ></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    ))
-                ) : (
-                    <p>Loading characters...</p>
-                )}
+                    );
+                })}
             </div>
+
             <h2 className="text-danger">Starships</h2>
             <div className="card-deck d-flex mb-5">
-                {store.starships.length > 0 ? (
-                    store.starships.map((starship, index) => (
-                        <div className="card m-3" key={index}>
+                {store.starships.map((starship) => {
+                    console.log("Starship UID:", starship.uid, "Category: starship");
+                    return (
+                        <div className="card m-3" key={starship.uid}>
                             <img
                                 className="card-img-top"
-                                src={getStarshipImageUrl(index)}
+                                src={getStarshipImageUrl(starship.uid)}
                                 alt={starship.name}
                                 onError={(e) =>
                                 (e.target.src =
@@ -67,28 +87,44 @@ export const Home = () => {
                             <div className="card-body">
                                 <h5 className="card-title">{starship.name}</h5>
                                 <div className="d-flex justify-content-between">
-                                <Link to={`/detail/starships/${starship.uid}`}>
-                                        <button className="btn btn-outline-primary"> Learn more! </button>
-                                        </Link> 
-                                    <button className="btn btn-outline-warning">
-                                        <i className="fa-regular fa-heart"></i>
+                                    <Link to={`/detail/starships/${starship.uid}`}>
+                                        <button className="btn btn-outline-primary">
+                                            Learn more!
+                                        </button>
+                                    </Link>
+                                    <button
+                                        className="btn btn-outline-warning"
+                                        onClick={() =>
+                                            isFavorite(`${starship.uid}-starships`)
+                                                ? actions.removeFavorite(`${starship.uid}-starships`)
+                                                : actions.addFavorite({
+                                                    uid: `${starship.uid}-starships`,
+                                                    name: starship.name,
+                                                    category: "starships",
+                                                })}>
+                                        <i className={
+                                            isFavorite(`${starship.uid}-starships`)
+                                                ? "fa-solid fa-heart"
+                                                : "fa-regular fa-heart"
+                                        }
+                                        ></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    ))
-                ) : (
-                    <p>Loading starships...</p>
-                )}
+                    );
+                })} 
             </div>
+
             <h2 className="text-danger">Planets</h2>
             <div className="card-deck d-flex mb-5">
-                {store.planets.length > 0 ? (
-                    store.planets.map((planet, index) => (
-                        <div className="card m-3" key={index}>
+                {store.planets.map((planet) => {
+                    console.log("Planet UID:", planet.uid, "Category: planets");
+                    return (
+                        <div className="card m-3" key={planet.uid}>
                             <img
                                 className="card-img-top"
-                                src={getPlanetImageUrl(index)}
+                                src={getPlanetImageUrl(planet.uid)}
                                 alt={planet.name}
                                 onError={(e) =>
                                 (e.target.src =
@@ -98,23 +134,34 @@ export const Home = () => {
                             <div className="card-body">
                                 <h5 className="card-title">{planet.name}</h5>
                                 <div className="d-flex justify-content-between">
-                                <Link to={`/detail/planets/${planet.uid}`}>
-                                        <button className="btn btn-outline-primary"> Learn more! </button>
-                                        </Link> 
-                                    <button className="btn btn-outline-warning">
-                                        <i className="fa-regular fa-heart"></i>
+                                    <Link to={`/detail/planets/${planet.uid}`}>
+                                        <button className="btn btn-outline-primary">
+                                            Learn more!
+                                        </button>
+                                    </Link>
+                                    <button
+                                        className="btn btn-outline-warning"
+                                        onClick={() =>
+                                            isFavorite(`${planet.uid}-planets`)
+                                                ? actions.removeFavorite(`${planet.uid}-planets`)
+                                                : actions.addFavorite({
+                                                    uid: `${planet.uid}-planets`,
+                                                    name: planet.name,
+                                                    category: "planets",
+                                                })}>
+                                        <i className={
+                                            isFavorite(`${planet.uid}-planets`)
+                                                ? "fa-solid fa-heart"
+                                                : "fa-regular fa-heart"
+                                        }
+                                        ></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    ))
-                ) : (
-                    <p>Loading planets...</p>
-                )}
+                    );
+                })}
             </div>
-
-
         </div>
     );
 };
-

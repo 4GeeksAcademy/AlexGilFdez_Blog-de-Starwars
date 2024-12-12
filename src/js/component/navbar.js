@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { Context } from "../store/appContext";
 
 export const Navbar = () => {
+	const { store, actions } = useContext(Context);
 	return (
 		<nav className="navbar navbar-light bg-light mb-5 ">
 			<div className="container">
@@ -10,13 +12,26 @@ export const Navbar = () => {
 			</Link>
 			<div className="dropdown">
 				<button className="btn btn-outline-dark dropdown-toggle " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-					Favoritos
+					Favoritos <span className="badge bg-danger">{store.favorites.length}</span>
 				</button>
-				<ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-					<li><a className="dropdown-item" href="#">Action</a></li>
-					<li><a className="dropdown-item" href="#">Another action</a></li>
-					<li><a className="dropdown-item" href="#">Something else here</a></li>
-				</ul>
+				<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                        {store.favorites.length > 0 ? (
+                            store.favorites.map((fav, index) => (
+                                <li key={index} className="dropdown-item d-flex justify-content-between align-items-center">
+                                    {fav.name}
+
+                                    <button
+                                        className="btn btn-sm ms-2"
+                                        onClick={() => actions.removeFavorite(fav.uid)}
+                                    >
+                                            <i className="fa-solid fa-trash"></i>
+                                    </button>
+                                </li>
+                            ))
+                        ) : (
+                            <li className="dropdown-item">No favorites added</li>
+                        )}
+                    </ul>
 			</div>
 			</div>
 		</nav>

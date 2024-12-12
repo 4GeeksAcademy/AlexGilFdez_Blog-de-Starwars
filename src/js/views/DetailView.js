@@ -1,10 +1,9 @@
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
 
 export const DetailView = () => {
     const { category, theid } = useParams();
-    const [details, setDetails] = useState(null); 
+    const [details, setDetails] = useState(null);
 
     useEffect(() => {
         const fetchDetails = async () => {
@@ -14,22 +13,22 @@ export const DetailView = () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-    
+
                 if (data.result && data.result.properties) {
                     setDetails(data.result.properties);
                 } else {
                     console.error("Data format unexpected:", data);
-                    setDetails(null); 
+                    setDetails(null);
                 }
             } catch (error) {
                 console.error("Error fetching details:", error);
-                setDetails(null); 
+                setDetails(null);
             }
         };
-    
+
         fetchDetails();
     }, [category, theid]);
-    
+
 
     const getImageUrl = () => {
         if (category === "people") return `https://starwars-visualguide.com/assets/img/characters/${theid}.jpg`;
@@ -64,8 +63,8 @@ export const DetailView = () => {
                 </div>
             </div>
 
-            <hr className="text-danger" style={{height: 3 }} /> 
-            <div className="row text-center text-danger mt-3 detail-info">
+            <hr className="text-danger" style={{ height: 3 }} />
+            <div className="row text-center text-danger mb-5 mt-3 detail-info">
                 {category === "people" && (
                     <>
                         <div className="col">
@@ -101,7 +100,7 @@ export const DetailView = () => {
                             <p><strong>Population:</strong></p>
                             <p>{details.population}</p>
                         </div>
-                        
+
                         <div className="col">
                             <p><strong>Rotation period:</strong></p>
                             <p>{details.rotation_period} days</p>
@@ -130,7 +129,7 @@ export const DetailView = () => {
                             <p><strong>Climate:</strong></p>
                             <p>{details.climate} </p>
                         </div>
-                        
+
                     </>
                 )}
 
